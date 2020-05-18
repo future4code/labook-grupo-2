@@ -1,17 +1,13 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import { AddressInfo } from "net";
 import dotenv from "dotenv";
-
-// import { IdGenerator } from "./service/IdGenerator";
-// import { UserDatabase } from "./data/UserDatabase";
-// import { Authenticator } from "./service/Authenticator";
-
+import { signupEndpoint } from "./endpoint/signupEndpoint";
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-
+app.post("/signup", signupEndpoint)
 
 
 // =======================================================
