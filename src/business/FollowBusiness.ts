@@ -12,5 +12,10 @@ export class FollowBusiness {
         return result
     }
 
+    public async undoFriendship(userId: string, userUndoFriendshipId: string){
+        const followDatabase = new FollowDatabase()
+        const result = await followDatabase.undoFriendship(userId, userUndoFriendshipId)
 
+        return result 
+    }
 }
