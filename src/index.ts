@@ -2,14 +2,14 @@ import express from "express";
 import { AddressInfo } from "net";
 import dotenv from "dotenv";
 import { userRouter } from "./router/UserRouter"
+import { followRouter } from "./router/FollowRouter";
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
 app.use("/user/", userRouter)
-
-
+app.use("/follow/", followRouter)
 
 const server = app.listen(process.env.PORT || 3000, () => {
     if (server) {

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserBusiness } from '../business/UserBusiness'
 import { Authenticator } from '../services/Authenticator'
+import { FollowDatabase } from "../data/FollowDatabase";
 
 export class UserController {
 
@@ -57,7 +58,5 @@ export class UserController {
             })
         }
     }
-
-
 
 }
