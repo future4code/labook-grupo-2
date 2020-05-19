@@ -1,6 +1,7 @@
 import { IdGenerator } from '../services/IdGenerator'
 import { HashManager } from '../services/HashManager'
 import { UserDatabase } from '../data/UserDatabase'
+import { FollowDatabase } from '../data/FollowDatabase'
 
 export class UserBusiness {
 
@@ -31,6 +32,4 @@ export class UserBusiness {
 
     }
     
-
-
 }
