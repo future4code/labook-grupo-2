@@ -5,3 +5,4 @@ export const followRouter = express.Router()
 const followController = new FollowController()
 
 followRouter.post("/make-friendship", followController.makeFriendship)
+followRouter.delete("/undo-friendship", followController.undoFriendship)
