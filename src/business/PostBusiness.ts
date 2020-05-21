@@ -29,5 +29,10 @@ export class PostBusiness {
     return await postDatabase.getFeed(id)
   }
 
+  public async getFeedByType(id: string) {
+    const postDatabase = new PostDatabase()
+    return await postDatabase.getFeed(id)
+  }
+
   
 }
