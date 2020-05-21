@@ -36,7 +36,7 @@ export class PostController {
       const userData = authenticator.verify(token)
 
       const postBusiness = new PostBusiness()
-      const feed = await postBusiness.getFeed(userData.id)
+      const feed:Post[] = await postBusiness.getFeed(userData.id)
 
       res.status(200).send({
         feed
@@ -47,4 +47,39 @@ export class PostController {
       })
     }
   }
+
+
+  async getFeedByType (req: Request, res: Response){
+    try{
+      const token = req.headers.authorization as string
+      const type = req.body.type
+
+      const authenticator = new Authenticator()
+      const userData = authenticator.verify(token)
+
+      const postBusiness = new PostBusiness()
+      const feed:Post[] = await postBusiness.getFeed(userData.id)
+      const filteredFeed = feed.filter((post)=>{
+        return post.type === type
+      })
+
+      res.status(200).send({
+        feed: filteredFeed
+      })
+
+    }catch(err){
+      res.status(400).send({
+        error: err.message
+      })
+    }
+  }
+}
+
+interface Post {
+  id: string,
+  image: string, 
+  description:string,
+  creationDate: Date,
+  type: string,
+  userId: string
 }
