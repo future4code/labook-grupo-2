@@ -12,3 +12,5 @@ postRouter.post("/like", likeController.likePost)
 
 postRouter.get("/feed", postController.getFeed)
 postRouter.get("/feed-type", postController.getFeedByType)
+
+postRouter.delete("/unlike", likeController.unlikePost)

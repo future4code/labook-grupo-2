@@ -13,4 +13,9 @@ export class LikeBusiness {
         return await likeDatabase.likePost(userId, postId)
     }
 
+    public async unlikePost(userId: string, postId: string){
+
+        const likeDatabase = new LikeDatabase()
+        return await likeDatabase.unlikePost(userId, postId)
+    }
 }

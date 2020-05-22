@@ -21,4 +21,14 @@ export class LikeDatabase extends BaseDatabase{
         })
         .into(LikeDatabase.TABLE_NAME)
     }
+
+    public async unlikePost(userId: string, postId: string): Promise<void> {
+        await this.connection()
+        .delete()
+        .from(LikeDatabase.TABLE_NAME)
+        .where({
+            user_id: userId,
+            post_id: postId 
+        })
+    }
 }
