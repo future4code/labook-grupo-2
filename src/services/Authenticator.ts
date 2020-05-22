@@ -1,29 +1,31 @@
 import * as jwt from "jsonwebtoken";
 
-export class Authenticator{
-    private static getExpiresIn():number{
+export class Authenticator {
+    private static getExpiresIn(): number {
         return Number(process.env.ACCESS_TOKEN_EXPIRES_IN)
     }
 
-    public generationToken(input: AuthenticationData):string {
+    public generationToken(
+        data: AuthenticationData,
+        expiresIn: string = process.env.ACCESS_TOKEN_EXPIRES_IN!
+    ): string {
         const token = jwt.sign(
-            input,
+            data,
             process.env.JWT_KEY as string,
-            {
-                expiresIn: Authenticator.getExpiresIn()
-            }
+            { expiresIn }
         )
         return token
     }
 
-    public verify(token: string):AuthenticationData{
+    public verify(token: string): AuthenticationData {
         const payload = jwt.verify(
             token,
             process.env.JWT_KEY as string
-            )as any
+        ) as any
         const result = {
             id: payload.id,
-            role: payload.role
+            role: payload.role,
+            device: payload.device
         }
         return result
     }
@@ -31,5 +33,6 @@ export class Authenticator{
 
 interface AuthenticationData {
     id: string
-    role: string
+    role?: string,
+    device?: string
 }
