@@ -2,7 +2,7 @@ import { BaseDatabase } from "./BaseDatabase";
 
 export class RefreshTokenDatabase extends BaseDatabase {
 
-    private static TABLE_NAME: string = "LaBookRefreshToken"
+    private static TABLE_NAME: string = "LaBookRefreshToken2"
 
     // PARA O SIGNUP
 
