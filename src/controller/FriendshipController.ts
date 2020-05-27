@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Authenticator } from '../services/Authenticator'
 import { FriendshipDatabase } from "../data/FriendshipDatabase";
+import { Friendship } from "../model/Friendship";
 
 const friendshipBusiness = new FriendshipDatabase()
 const authenticator = new Authenticator()
@@ -24,8 +25,8 @@ export class FriendshipController {
             if(userRelation){
                 throw new Error("Você já têm amizade com esse usuário")
             }
-
-            await friendshipBusiness.makeFriendship(userData.id, userToMakeFriendshipId)
+            const friendship = new Friendship(userData.id, userToMakeFriendshipId)
+            await friendshipBusiness.makeFriendship(friendship)
 
             res.status(200).send({
                 message: "Parabens, voce tem um novo amigo !"
@@ -36,7 +37,6 @@ export class FriendshipController {
             })
         }
     }
-
     async undoFriendship(req: Request, res: Response) {
         try {
             const token = req.headers.authorization as string
@@ -55,7 +55,8 @@ export class FriendshipController {
             if(userRelation === undefined){
                 throw new Error("Você não tem amizade com esse usuário")
             }
-            await friendshipBusiness.undoFriendship(userData.id, userUndoFriendshipId)
+            const friendship= new Friendship(userData.id, userUndoFriendshipId)
+            await friendshipBusiness.undoFriendship(friendship)
 
             res.status(200).send({
                 message: "Você desfez a amizade!"

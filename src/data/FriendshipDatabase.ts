@@ -1,16 +1,24 @@
 import { BaseDatabase } from "./BaseDatabase";
+import { Friendship } from "../model/Friendship";
 
 export class FriendshipDatabase extends BaseDatabase{
   private static TABLE_NAME:string = "LaBookUserFriendship"
 
-  public async makeFriendship(userId:string, userToMakeFriendshipId: string): Promise<void>{
+  private toModel(dbResult?: any): Friendship | undefined {
+    return (
+        dbResult && new Friendship(dbResult.userId, dbResult.userToMakeFriendshipId)
+    )
+}
+
+  public async makeFriendship(friendship: Friendship ): Promise<void>{
+    const friendshipData = this.toModel(friendship)
+
     await this.connection()
     .insert({
-      user_id: userId,
-      user_to_make_friendship_id: userToMakeFriendshipId
+      user_id: friendshipData?.getUserId(),
+      user_to_make_friendship_id: friendshipData?.getUserToMakeFriendshipId()
     })
     .into(FriendshipDatabase.TABLE_NAME)
-
   }
   public async getFriendshipById(id: string): Promise<any[]>{
     const result = await this.connection()
@@ -25,16 +33,17 @@ export class FriendshipDatabase extends BaseDatabase{
     return result
   }
 
-  public async undoFriendship(userId:string, userUndoFriendshipId: string): Promise<void>{
+  public async undoFriendship(friendship: Friendship ): Promise<void>{
+    const friendshipData = this.toModel(friendship)
     await this.connection()
     .delete()
     .from(FriendshipDatabase.TABLE_NAME)
     .where({
-      user_id: userId,
-      user_to_make_friendship_id: userUndoFriendshipId
+      user_id: friendshipData?.getUserId(),
+      user_to_make_friendship_id: friendshipData?.getUserToMakeFriendshipId()
     }).orWhere({
-      user_id: userUndoFriendshipId,
-      user_to_make_friendship_id: userId
+      user_id: friendshipData?.getUserToMakeFriendshipId(),
+      user_to_make_friendship_id: friendshipData?.getUserId()
     })
   }
 }
