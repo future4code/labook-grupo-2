@@ -1,7 +1,7 @@
 import { IdGenerator } from '../services/IdGenerator'
 import { HashManager } from '../services/HashManager'
 import { UserDatabase } from '../data/UserDatabase'
-import { FollowDatabase } from '../data/FollowDatabase'
+import { User } from '../model/User'
 
 export class UserBusiness {
 
@@ -12,8 +12,10 @@ export class UserBusiness {
         const hashManager = new HashManager()
         const hashPassword = await hashManager.hash(password)
 
+        const user = new User(id, email, name, hashPassword, role)
+
         const userDatabase = new UserDatabase()
-        await userDatabase.createUser(id, email, name, hashPassword, role)
+        await userDatabase.createUser(user)
 
         return { id: id, role: role }
     }
