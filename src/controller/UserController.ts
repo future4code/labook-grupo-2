@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { UserBusiness } from '../business/UserBusiness'
 import { Authenticator } from '../services/Authenticator'
-import { FollowDatabase } from "../data/FollowDatabase";
 import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
 
 export class UserController {
@@ -16,6 +15,23 @@ export class UserController {
                 role,
                 device
             } = req.body
+
+            if (
+                !email || email === "" ||
+                !name || name === "" ||
+                !password || password === "" ||
+                !device || device === ""
+            ) {
+                throw new Error("Parâmetros Inválidos")
+            }
+
+            if(password.length < 6){
+                throw new Error("A senha deverá ter no mínimo 6 caracteres")
+            }
+
+            if(email.indexOf("@") === -1){
+                throw new Error("Email inválido")
+            }
 
             const result = await userBusiness.signup(email, name, password, role)
 
@@ -60,6 +76,14 @@ export class UserController {
     async login(req: Request, res: Response) {
         try {
             const { email, password, device } = req.body
+
+            if (
+                !email || email === "" ||
+                !password || password === "" ||
+                !device || device === ""
+            ) {
+                throw new Error("Parâmetros Inválidos")
+            }
 
             const userBusiness = new UserBusiness()
             const result = await userBusiness.login(email, password)
@@ -118,7 +142,7 @@ export class UserController {
             const authenticator = new Authenticator()
             const refreshTokenData = authenticator.verify(refreshToken)
 
-            if(refreshTokenData.device !== device){
+            if (refreshTokenData.device !== device) {
                 throw new Error("Esse aparelho não está autenticado!")
             }
 
