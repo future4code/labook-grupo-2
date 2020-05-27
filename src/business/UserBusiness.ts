@@ -22,13 +22,18 @@ export class UserBusiness {
         const userDataBase = new UserDatabase()
         const user = await userDataBase.getUserByEmail(email)
 
+        if(!user){
+            throw new Error("Parâmetros incorretos !")// O usuário não existe 
+        }
+        
+
         const hashManager = new HashManager()
-        const comparePasswords = await hashManager.compare(password, user.password)
+        const comparePasswords = await hashManager.compare(password, user.getPassword())
 
         if (!comparePasswords) {
             throw new Error("Invalid Params")
         }
-        return { id: user.id, role: user.role}
+        return { id: user.getId(), role: user.getRole()}
 
     }
     

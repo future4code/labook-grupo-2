@@ -19,7 +19,8 @@ export class UserController {
             if (
                 !email || email === "" ||
                 !name || name === "" ||
-                !password || password === ""
+                !password || password === "" ||
+                !device || device === ""
             ) {
                 throw new Error("Parâmetros Inválidos")
             }
@@ -78,7 +79,8 @@ export class UserController {
 
             if (
                 !email || email === "" ||
-                !password || password === ""
+                !password || password === "" ||
+                !device || device === ""
             ) {
                 throw new Error("Parâmetros Inválidos")
             }
