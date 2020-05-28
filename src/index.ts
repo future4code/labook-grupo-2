@@ -9,9 +9,9 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use("/user/", userRouter)
 app.use("/friendship/", friendshipRouter)
 app.use("/post", postRouter)
+app.use("/", userRouter)
 
 const server = app.listen(process.env.PORT || 3000, () => {
     if (server) {

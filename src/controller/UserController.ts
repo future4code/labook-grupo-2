@@ -2,19 +2,17 @@ import { Request, Response } from "express";
 import { UserBusiness } from '../business/UserBusiness'
 import { Authenticator } from '../services/Authenticator'
 import { RefreshTokenDatabase } from "../data/RefreshTokenDatabase";
+import { BaseDatabase } from "../data/BaseDatabase";
+
+const userBusiness = new UserBusiness()
+const authenticator = new Authenticator()
+const refreshTokenDatabase = new RefreshTokenDatabase()
 
 export class UserController {
 
     async signup(req: Request, res: Response) {
         try {
-            const userBusiness = new UserBusiness()
-            const {
-                email,
-                name,
-                password,
-                role,
-                device
-            } = req.body
+            const { email, name, password, role, device } = req.body
 
             if (
                 !email || email === "" ||
@@ -35,8 +33,6 @@ export class UserController {
 
             const result = await userBusiness.signup(email, name, password, role)
 
-            const authenticator = new Authenticator()
-
             const acessToken = authenticator.generationToken(
                 {
                     id: result.id,
@@ -53,13 +49,7 @@ export class UserController {
                 process.env.REFRESH_TOKEN_EXPIRES_IN
             )
 
-            const refreshTokenDatabase = new RefreshTokenDatabase()
-            await refreshTokenDatabase.createRefreshToken(
-                refreshToken,
-                device,
-                true,
-                result.id
-            )
+            await refreshTokenDatabase.createRefreshToken(refreshToken, device, true, result.id)
 
             res.status(200).send({
                 acessToken,
@@ -71,6 +61,8 @@ export class UserController {
                 error: err.message
             })
         }
+
+        await BaseDatabase.destroyConnection()
     }
 
     async login(req: Request, res: Response) {
@@ -85,10 +77,7 @@ export class UserController {
                 throw new Error("Parâmetros Inválidos")
             }
 
-            const userBusiness = new UserBusiness()
             const result = await userBusiness.login(email, password)
-
-            const authenticator = new Authenticator()
 
             const acessToken = authenticator.generationToken(
                 {
@@ -106,8 +95,6 @@ export class UserController {
                 process.env.REFRESH_TOKEN_EXPIRES_IN
             )
 
-            const refreshTokenDatabase = new RefreshTokenDatabase()
-
             const refreshTokenFromDb = await refreshTokenDatabase
                 .getRefreshTokenByUserIdAndDevice(result.id, device)
 
@@ -115,12 +102,7 @@ export class UserController {
                 await refreshTokenDatabase.deleteRefreshToken(refreshTokenFromDb.refreshToken)
             }
 
-            await refreshTokenDatabase.createRefreshToken(
-                refreshToken,
-                device,
-                true,
-                result.id
-            )
+            await refreshTokenDatabase.createRefreshToken(refreshToken, device, true, result.id)
 
             res.status(200).send({
                 acessToken,
@@ -132,6 +114,8 @@ export class UserController {
                 error: err.message
             })
         }
+
+        await BaseDatabase.destroyConnection()
     }
 
 
@@ -139,7 +123,6 @@ export class UserController {
         try {
             const { refreshToken, device } = req.body
 
-            const authenticator = new Authenticator()
             const refreshTokenData = authenticator.verify(refreshToken)
 
             if (refreshTokenData.device !== device) {
@@ -154,9 +137,7 @@ export class UserController {
                 process.env.ACCESS_TOKEN_EXPIRES_IN
             )
 
-            res.status(200).send({
-                acessToken
-            })
+            res.status(200).send({ acessToken })
 
         }
         catch (err) {
@@ -164,6 +145,8 @@ export class UserController {
                 error: err.message
             })
         }
+
+        await BaseDatabase.destroyConnection()
 
     }
 

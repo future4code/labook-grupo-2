@@ -2,9 +2,10 @@ import { Request, Response } from "express";
 import { Authenticator } from '../services/Authenticator'
 import { FriendshipDatabase } from "../data/FriendshipDatabase";
 import { Friendship } from "../model/Friendship";
+import { BaseDatabase } from "../data/BaseDatabase";
 
-const friendshipBusiness = new FriendshipDatabase()
 const authenticator = new Authenticator()
+const friendshipBusiness = new FriendshipDatabase()
 
 export class FriendshipController {
     async makeFriendship(req: Request, res: Response) {
@@ -25,6 +26,7 @@ export class FriendshipController {
             if(userRelation){
                 throw new Error("Você já têm amizade com esse usuário")
             }
+
             const friendship = new Friendship(userData.id, userToMakeFriendshipId)
             await friendshipBusiness.makeFriendship(friendship)
 
@@ -36,11 +38,13 @@ export class FriendshipController {
                 error: err.message
             })
         }
+
+        await BaseDatabase.destroyConnection()
     }
     async undoFriendship(req: Request, res: Response) {
         try {
             const token = req.headers.authorization as string
-            const userUndoFriendshipId = req.body.userUndoFriendshipId
+            const { userUndoFriendshipId } = req.body
 
             if (!userUndoFriendshipId || userUndoFriendshipId === "") {
                 throw new Error("Informe um usúario que voce gostaria de deixar de ser amigo!")
@@ -55,6 +59,7 @@ export class FriendshipController {
             if(userRelation === undefined){
                 throw new Error("Você não tem amizade com esse usuário")
             }
+
             const friendship= new Friendship(userData.id, userUndoFriendshipId)
             await friendshipBusiness.undoFriendship(friendship)
 
@@ -66,5 +71,7 @@ export class FriendshipController {
                 error: err.message
             })
         }
+
+        await BaseDatabase.destroyConnection()
     }
 }
