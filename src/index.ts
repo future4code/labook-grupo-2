@@ -11,7 +11,7 @@ app.use(express.json());
 
 app.use("/user/", userRouter)
 app.use("/friendship/", friendshipRouter)
-app.use("/post/", postRouter)
+app.use("/post", postRouter)
 
 const server = app.listen(process.env.PORT || 3000, () => {
     if (server) {

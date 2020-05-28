@@ -1,5 +1,6 @@
 import { IdGenerator } from "../services/IdGenerator"
 import { PostDatabase } from "../data/PostDatabase"
+import { Post } from "../model/Post"
 
 export class PostBusiness {
 
@@ -14,7 +15,7 @@ export class PostBusiness {
     const id = idGenerator.generatorId()
 
     const postDatabase = new PostDatabase()
-    return await postDatabase.createPost(
+    const post = new Post(
       id,
       image,
       description,
@@ -22,6 +23,8 @@ export class PostBusiness {
       type,
       userId
     )
+    return await postDatabase.createPost(post)
+    
   }
 
   public async getFeed(id: string) {
