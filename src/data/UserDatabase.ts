@@ -11,14 +11,13 @@ export class UserDatabase extends BaseDatabase {
     }
 
     public async createUser(user: User): Promise<void> {
-        const userData = this.toModel(user)
         await this.connection()
             .insert({
-                id: userData?.getId(),
-                email: userData?.getEmail(),
-                name: userData?.getName(),
-                password: userData?.getPassword(),
-                role: userData?.getRole()
+                id: user.getId(),
+                email: user.getEmail(),
+                name: user.getName(),
+                password: user.getPassword(),
+                role: user.getRole()
             })
             .into(UserDatabase.TABLE_NAME)
     }
