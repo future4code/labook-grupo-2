@@ -5,7 +5,6 @@ export class RefreshTokenDatabase extends BaseDatabase {
     private static TABLE_NAME: string = "LaBookRefreshToken2"
 
     // PARA O SIGNUP
-
     public async createRefreshToken(
         refreshToken: string,
         device: string,
@@ -39,7 +38,6 @@ export class RefreshTokenDatabase extends BaseDatabase {
     }
 
     // PARA O LOGIN
-
     public async getRefreshTokenByUserIdAndDevice(
         userId: string,
         device: string
@@ -51,10 +49,6 @@ export class RefreshTokenDatabase extends BaseDatabase {
                 user_id: userId,
                 device
             })
-
-        // if(result[0] === undefined){
-        //     return undefined
-        // }
 
         return result[0] && {
             refreshToken: result[0].refresh_token,
