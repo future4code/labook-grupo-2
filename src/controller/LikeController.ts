@@ -13,10 +13,18 @@ export class LikeController {
             const token = req.headers.authorization as string
             const { postId } = req.body
 
+            if (postId === undefined || postId === "") {
+                throw new Error("Informe poste para curtir.")
+            }
+
+            if(token === undefined || token === ""){
+                throw new Error("O usuário deve estar logado.")
+            }
+
             const userId = authenticator.verify(token).id
 
             const verifyLike = await likeBusiness.verifyLike(userId, postId)
-            if(verifyLike !== 0){
+            if (verifyLike !== 0) {
                 throw new Error("Você não pode curtir este post novamente")
             }
 
@@ -37,15 +45,15 @@ export class LikeController {
     async unlikePost(req: Request, res: Response) {
         try {
             const token = req.headers.authorization as string
-            const{ postId } = req.body
+            const { postId } = req.body
 
             const userId = authenticator.verify(token).id
 
             const verifyLike = await likeBusiness.verifyLike(userId, postId)
-            if(verifyLike === 0){
+            if (verifyLike === 0) {
                 throw new Error("Você não pode descurtir um post que você não curtiu!")
             }
-            
+
             await likeBusiness.unlikePost(userId, postId)
 
             res.status(200).send({
