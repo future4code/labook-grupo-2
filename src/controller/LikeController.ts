@@ -47,6 +47,14 @@ export class LikeController {
             const token = req.headers.authorization as string
             const { postId } = req.body
 
+            if (postId === undefined || postId === "") {
+                throw new Error("Informe poste para descurtir.")
+            }
+
+            if(token === undefined || token === ""){
+                throw new Error("O usuário deve estar logado.")
+            }
+
             const userId = authenticator.verify(token).id
 
             const verifyLike = await likeBusiness.verifyLike(userId, postId)
