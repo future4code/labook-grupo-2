@@ -12,6 +12,18 @@ export class CommentController {
       const token = req.headers.authorization as string
       const { comment, postId } = req.body
 
+      if (postId === undefined || postId === "") {
+        throw new Error("Informe um post para comentar.")
+      }
+
+      if (comment === undefined || comment === "") {
+        throw new Error("O comentário não pode ficar vazio.")
+      }
+
+      if (token === undefined || token === "") {
+        throw new Error("O usuário deve estar logado.")
+      }
+
       const userId = authenticator.verify(token).id
 
       await commentBusiness.commentPost(comment, userId, postId)
